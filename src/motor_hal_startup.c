@@ -24,11 +24,15 @@ int motor_startup_wait_bootup(can_driver_t *drv __attribute__((unused)),
                               uint8_t node_id, int timeout_ms,
                               const volatile bool *bootup_flag)
 {
+    fprintf(stderr, "[startup] node=%d waiting for bootup (timeout=%dms)...\n",
+            node_id, timeout_ms);
     int elapsed = 0;
     while (!*bootup_flag && elapsed < timeout_ms) {
         usleep(10000);   /* 10ms 轮询间隔 */
         elapsed += 10;
     }
+    fprintf(stderr, "[startup] node=%d bootup_flag=%s after %dms\n",
+            node_id, *bootup_flag ? "TRUE" : "FALSE", elapsed);
     return *bootup_flag ? 0 : -ETIMEDOUT;
 }
 

@@ -644,6 +644,10 @@ static void _dispatch_frame(motor_hal_t *hal, const canfd_frame_t *f)
 {
     uint32_t func = canopen_func_code(f->id);
 
+    /* 诊断: 打印每个收到的帧, 确认 recv 线程在干活 */
+    fprintf(stderr, "[recv] COB=0x%03X func=0x%03X dlc=%d data[0]=0x%02X\n",
+            f->id, func, f->dlc, f->data[0]);
+
     switch (func) {
     case 0x580: {  /* SDO 响应 → 入队, 等待 sdo_client 消费 */
         sdo_push_response(f);
@@ -654,7 +658,14 @@ static void _dispatch_frame(motor_hal_t *hal, const canfd_frame_t *f)
         if (canopen_is_bootup(f->id, f->data[0])) {
             uint8_t node = canopen_extract_node(f->id, COB_BOOTUP_BASE);
             motor_node_t *m = _find_motor(hal, node);
-            if (m) m->bootup_received = true;
+            if (m) {
+                m->bootup_received = true;
+                fprintf(stderr, "[recv] Bootup detected! node=%d bootup_received=true\n", node);
+            } else {
+                fprintf(stderr, "[recv] WARN: Bootup from node %d but motor not registered!\n", node);
+            }
+        } else {
+            fprintf(stderr, "[recv] 0x700 frame but NOT bootup (data[0]=0x%02X)\n", f->data[0]);
         }
         break;
     }
