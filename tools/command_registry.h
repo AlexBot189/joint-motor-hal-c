@@ -15,7 +15,7 @@
 enum {
     CMD_INIT, CMD_STARTUP, CMD_ENABLE, CMD_DISABLE, CMD_RESET,
     CMD_SPEED, CMD_ACCEL, CMD_ABS, CMD_REL, CMD_MAXV, CMD_STOP, CMD_MODE,
-    CMD_READ, CMD_WATCH, CMD_HELP,
+    CMD_READ, CMD_WATCH, CMD_SENSOR, CMD_HELP,
     CMD_COUNT
 };
 
@@ -61,6 +61,7 @@ int cmd_do_mode(motor_hal_t *hal, int cmd_id, int argc, char **argv);
 int cmd_do_read(motor_hal_t *hal, int cmd_id, int argc, char **argv);
 int cmd_do_watch(motor_hal_t *hal, int cmd_id, int argc, char **argv);
 int cmd_do_help(motor_hal_t *hal, int cmd_id, int argc, char **argv);
+int cmd_do_sensor(motor_hal_t *hal, int cmd_id, int argc, char **argv);
 
 /* ================================================================
  * 命令分发: 根据命令名查找并执行回调

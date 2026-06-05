@@ -21,6 +21,7 @@ add_executable(motor_tool
     cmd_system.c
     cmd_watch.c
     cmd_help.c
+    cmd_sensor.c
 )
 
 target_include_directories(motor_tool PRIVATE
